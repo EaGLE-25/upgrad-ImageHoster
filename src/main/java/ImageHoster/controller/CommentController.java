@@ -15,13 +15,13 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 @Controller
-public class CommentController {
+public class CommentController{
     @Autowired
     private CommentService commentService;
     @Autowired
     private ImageService imageService;
 
-    //    create comment
+    //create comment
     @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments",method = RequestMethod.POST)
     public String createComment(@PathVariable("imageId") Integer imageId, @PathVariable("imageTitle") String title, Comment newComment, HttpSession session){
         Image image = imageService.getImage(imageId);

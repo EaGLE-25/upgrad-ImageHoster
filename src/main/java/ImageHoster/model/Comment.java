@@ -1,12 +1,14 @@
 package ImageHoster.model;
 
+import ImageHoster.model.Image;
+import ImageHoster.model.User;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Comment{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -66,3 +68,4 @@ public class Comment {
         this.image = image;
     }
 }
+
