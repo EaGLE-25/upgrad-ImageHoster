@@ -26,11 +26,9 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
-    @Autowired
-    private TagService tagService;
 
     @Autowired
-    private CommentService commentService;
+    private TagService tagService;
 
     //This method displays all the images in the user home page after successful login
     @RequestMapping("images")
@@ -41,7 +39,7 @@ public class ImageController {
     }
 
 //    show image
-    @RequestMapping("/images/{id}")
+    @RequestMapping("/images/{id}/{title}")
     public String showImage(@PathVariable("id") Integer id, Model model) {
         Image image = imageService.getImage(id);
         List<Tag>tagList = image.getTags();
@@ -100,7 +98,7 @@ public class ImageController {
             model.addAttribute("tags",tags);
             return "images/edit";
         }else{
-            String error = "Only owner of this image can edit";
+            String error = "Only the owner of the image can edit the image";
             model.addAttribute("tags",tagList);
             model.addAttribute("editError",error);
             return "images/image";
@@ -132,11 +130,11 @@ public class ImageController {
         updatedImage.setDate(new Date());
 
         imageService.updateImage(updatedImage);
-        return "redirect:/images/"+updatedImage.getTitle();
+        return "redirect:/images/"+updatedImage.getId()+'/'+updatedImage.getTitle();
     }
 
 //  delete image
-    @RequestMapping(value = "/deleteImage",method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteImage",method = RequestMethod.DELETE)
     public String deleteImage(@RequestParam("imageId") Integer imageId,HttpSession session,Model model){
         Image image = imageService.getImage(imageId);
         List<Tag>tagList = image.getTags();
@@ -151,7 +149,7 @@ public class ImageController {
             imageService.deleteImage(imageId);
             return "redirect:/images";
         }else{
-            String error = "Only owner of this image can delete";
+            String error = "Only the owner of the image can delete the image";
             model.addAttribute("image",image);
             model.addAttribute("tags",tagList);
             model.addAttribute("deleteError",error);
@@ -159,19 +157,6 @@ public class ImageController {
         }
     }
 
-//    create comment
-    @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments",method = RequestMethod.POST)
-    public String createComment(@PathVariable("imageId") Integer imageId, @PathVariable("imageTitle") String title,Comment newComment,HttpSession session){
-       Image image = imageService.getImage(imageId);
-       User user = (User) session.getAttribute("loggeduser");
-
-       newComment.setCreatedDate(new Date());
-       newComment.setImage(image);
-       newComment.setUser(user);
-
-       commentService.createComment(newComment);
-       return "redirect:/images/"+imageId;
-    }
 
     //This method converts the image to Base64 format
     private String convertUploadedFileToBase64(MultipartFile file) throws IOException {

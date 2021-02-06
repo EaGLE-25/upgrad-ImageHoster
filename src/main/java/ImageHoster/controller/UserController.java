@@ -36,11 +36,13 @@ public class UserController {
     public String registerUser(User user,Model model) {
         //Complete the method
         String password = user.getPassword();
-        boolean strongPassword = userService.strongPassword(password);
+        boolean strongPassword = userService.checkStrongPassword(password);
+
+        System.out.println(strongPassword);
 
         if(strongPassword == true){
             userService.registerUser(user);
-            return "users/login";
+            return "redirect:/users/login";
         }else{
             String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
             User user1 = new User();
@@ -68,13 +70,13 @@ public class UserController {
             session.setAttribute("loggeduser",user1);
             return "redirect:/images";
         }else{
-            return  "redirect:/users/login";
+            return  "users/login";
         }
     }
 
     @RequestMapping(value = "users/logout",method = RequestMethod.POST)
     public String logoutUser(HttpSession session){
         session.invalidate();
-        return "redirect:/";
+        return "index";
     }
 }

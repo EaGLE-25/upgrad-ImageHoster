@@ -34,8 +34,8 @@ public class UserService {
         }
     }
 
-    public boolean strongPassword(String password){
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{1,}";
+    public boolean checkStrongPassword(String password){
+        String pattern = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=])(?=\\S+$).{1,}";
         boolean matches = password.matches(pattern);
         return matches;
     }
